@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Pokedex Connexion</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" type="text/css" media="screen" href="longin.css" />
+	</head>
+	<body>
+		<div class="login-box">
+			<h2>Identification</h2>
+			<form name="myForm" onchange="validateForm()">
+				<div class="user-box">
+					<input type="text" name="pseudo" required="" />
+					<label>Pseudo</label>
+				</div>
+				<div class="user-box">
+					<input type="texts" name="email" required="" />
+					<label>Email</label>
+				</div>
+				<div class="user-box">
+					<input type="texts" name="dateNaissance" required="" />
+					<label>Date de naissance : jj/mm/aaaa</label>
+				</div>
+				<div class="user-box">
+					<input type="password" name="newPassword" required="" />
+					<label>Mot de passe</label>
+				</div>
+				<div class="user-box">
+					<input type="password" name="confirmPassword" required="" onblur="validatePassword()" />
+					<label>Confirmez mot de passe</label>
+				</div>
+
+				<a id="valid">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					Valider
+				</a>
+			</form>
+		</div>
+	</body>
+	<script src="./longin.js"></script>
+</html>
