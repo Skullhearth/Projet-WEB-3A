@@ -50,9 +50,7 @@ function validateForm() {
 		});
 }
 
-let initiate = () => {
+window.onload = (event) => {
 	let btnValid = document.getElementById("valid");
 	btnValid.addEventListener("click", validateForm);
 };
-
-initiate();
