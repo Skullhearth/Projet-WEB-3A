@@ -72,23 +72,25 @@ app.post("/newuser", async (req, res) => {
 });
 
 app.post("/connexion", async (req, res) => {
-	const { nickname, password } = req.body;
-	if (nickname && password) {
-		const query = { pseudo: nickname, pswd: password };
+	const { pseudo, password } = await req.body;
+	if (pseudo && password) {
+		const query = { pseudo: pseudo, pswd: password };
 		const utilisateur = await utilisateurs.findOne(query);
 		console.log(utilisateur);
 		if (utilisateur) {
 			const validPassWord = password === utilisateur.pswd;
-			console.log(validPassWord);
+
 			if (validPassWord) {
 				req.session.idUtilisateur = utilisateur.id;
-				return res.redirect("/");
+				//return res.sendStatus;
 			} else {
 				console.log("Mot de passe incorrect");
 			}
 		} else {
 			console.log("Utilisateur n'existe pas");
 		}
+	} else {
+		console.log("On est même pas rentré dedans");
 	}
 });
 
