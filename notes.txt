@@ -4,3 +4,9 @@ router
 ajout dans la session
 app.use dans app.js
 session.id existe
+
+
+
+à faire :
+- crypter les mdp
+- ne pas créer deux user avec le meme pseudo
