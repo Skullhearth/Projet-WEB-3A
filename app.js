@@ -77,14 +77,14 @@ app.post("/newuser", async (req, res) => {
 app.post("/connexion", async (req, res) => {
 	const { pseudo, password } = await req.body;
 	if (pseudo && password) {
-		const query = { pseudo: pseudo, pswd: password };
+		const query = { pseudo: pseudo };
 		const utilisateur = await utilisateurs.findOne(query);
 		console.log(utilisateur);
 		if (utilisateur) {
-			const validPassWord = password === utilisateur.pswd;
+			const validPassWord = await bcrypt.compare(password, utilisateur.pswd);
 
 			if (validPassWord) {
-				req.session.idUtilisateur = utilisateur.id;
+				req.session.idUtilisateur = utilisateur.pseudo;
 				//return res.sendStatus;
 			} else {
 				console.log("Mot de passe incorrect");
