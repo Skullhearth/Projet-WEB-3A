@@ -89,8 +89,6 @@ app.post("/connexion", async (req, res) => {
 		} else {
 			console.log("Utilisateur n'existe pas");
 		}
-	} else {
-		console.log("On est même pas rentré dedans");
 	}
 });
 

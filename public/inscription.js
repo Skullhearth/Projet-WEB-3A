@@ -1,10 +1,10 @@
 function validateForm() {
 	console.log("on appelle");
-	var pseudo = document.forms["myForm"]["pseudo"].value;
-	var email = document.forms["myForm"]["email"].value;
-	var dateNaissance = document.forms["myForm"]["dateNaissance"].value;
-	var newPassword = document.forms["myForm"]["newPassword"].value;
-	var confirmPassword = document.forms["myForm"]["confirmPassword"].value;
+	var pseudo = document.forms["myForm"]["pseudo"].value.trim();
+	var email = document.forms["myForm"]["email"].value.trim();
+	var dateNaissance = document.forms["myForm"]["dateNaissance"].value.trim();
+	var newPassword = document.forms["myForm"]["newPassword"].value.trim();
+	var confirmPassword = document.forms["myForm"]["confirmPassword"].value.trim();
 
 	if (pseudo === "" || email === "" || dateNaissance === "" || newPassword === "" || confirmPassword === "") {
 		alert("Veuillez remplir tous les champs !");

@@ -1,6 +1,6 @@
 let connexion = () => {
-	let pseu = document.getElementById("pseudo").value;
-	let mdp = document.getElementById("mdp").value;
+	let pseu = document.getElementById("pseudo").value.trim();
+	let mdp = document.getElementById("mdp").value.trim();
 
 	fetch("/connexion", {
 		method: "POST",
