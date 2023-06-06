@@ -3,7 +3,7 @@ const express = require("express");
 const fs = require("fs");
 const { MongoClient, ServerApiVersion, Collection, ObjectId } = require("mongodb");
 const bodyParser = require("body-parser");
-//const bcrypt = require("bcrypt");
+
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 
@@ -72,11 +72,14 @@ app.post("/newuser", async (req, res) => {
 });
 
 app.post("/connexion", async (req, res) => {
-	const { email, password } = req.body;
-	if (email && password) {
-		const utilisateur = utilisateurs.flat().find((utilisateur) => utilisateur.email === email);
+	const { nickname, password } = req.body;
+	if (nickname && password) {
+		const query = { pseudo: nickname, pswd: password };
+		const utilisateur = await utilisateurs.findOne(query);
+		console.log(utilisateur);
 		if (utilisateur) {
-			const validPassWord = await bcrypt.compare(password, utilisateur.password);
+			const validPassWord = password === utilisateur.pswd;
+			console.log(validPassWord);
 			if (validPassWord) {
 				req.session.idUtilisateur = utilisateur.id;
 				return res.redirect("/");
@@ -87,7 +90,6 @@ app.post("/connexion", async (req, res) => {
 			console.log("Utilisateur n'existe pas");
 		}
 	}
-	res.redirect("/connexion");
 });
 
 /*

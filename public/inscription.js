@@ -17,17 +17,16 @@ function validateForm() {
 		return false;
 	}
 
-	// Envoyer les informations à la base de données serveur
-	console.log("user : ", pseudo, email, dateNaissance, newPassword, confirmPassword);
 	// Code pour envoyer les données à la base de données ici
 
 	const util = {
-		pseudo: pseudo,
+		nickname: pseudo,
 		email: email,
 		dtnaiss: dateNaissance,
-		pswd: newPassword,
+		password: newPassword,
 	};
 
+	console.log(util);
 	const utilJSON = JSON.stringify(util);
 
 	fetch("/newuser", {
