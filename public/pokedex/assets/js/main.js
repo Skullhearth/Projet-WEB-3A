@@ -6,6 +6,7 @@ const limit = 12
 let offset = 0;
 
 function convertPokemonToLi(pokemon) {
+    
     return `
         <li class="pokemon ${pokemon.type}">
             <span class="number">#${pokemon.number}</span>
@@ -36,6 +37,21 @@ function convertPokemonToLi(pokemon) {
 
 function loadPokemonItens(offset, limit) {
     pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
+        /*fetch("/tasks")
+		.then((response) => {
+			if (response.ok) {
+				return response.json();
+			} else {
+				throw new Error("Erreur lors de la récupération des tâches");
+			}
+		})
+		.then((data) => {
+			// Traitez les données reçues et créez les éléments DOM correspondants
+
+		})
+		.catch((error) => {
+			console.error(error);
+		})*/
         const newHtml = pokemons.map(convertPokemonToLi).join('')
         pokemonList.innerHTML += newHtml
     })

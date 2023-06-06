@@ -167,3 +167,18 @@ body {
 		bottom: 100%;
 	}
 }
+
+/* spécifique à la page inscription */
+.retour-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color:rgba(3, 233, 244, 0.25); /* Couleur de fond du bouton */
+    color: #fff; /* Couleur de police du bouton */
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    cursor: pointer;
+	font-weight: bold;
+  }
