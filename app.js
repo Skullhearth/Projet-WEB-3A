@@ -3,7 +3,7 @@ const express = require("express");
 const fs = require("fs");
 const { MongoClient, ServerApiVersion, Collection, ObjectId } = require("mongodb");
 const bodyParser = require("body-parser");
-
+const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 
@@ -60,10 +60,13 @@ client
 
 //Ajout d'une nouvelle tâche
 app.post("/newuser", async (req, res) => {
-	var user = req.body;
+	const salt = await bcrypt.genSalt(10);
+	const passwordToSave = await bcrypt.hash(req.body.password, salt);
+
+	const user = { pseudo: req.body.nickname, email: req.body.email, dtnaiss: req.body.dtnaiss, pswd: passwordToSave };
 
 	try {
-		const result = await utilisateurs.insertOne(user);
+		await utilisateurs.insertOne(user);
 		console.log("Utilisateur ajouté à la base");
 		res.sendStatus(201);
 	} catch (err) {
