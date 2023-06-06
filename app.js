@@ -59,17 +59,16 @@ client
 	});
 
 //Ajout d'une nouvelle tâche
-app.post("/newuser", (req, res) => {
+app.post("/newuser", async (req, res) => {
 	var user = req.body;
 
-	utilisateurs.insertOne(user, (err, result) => {
-		if (err) {
-			return console.log(err);
-		}
+	try {
+		const result = await utilisateurs.insertOne(user);
 		console.log("Utilisateur ajouté à la base");
 		res.sendStatus(201);
-	});
-	res.sendFile("/index.html");
+	} catch (err) {
+		console.log(err);
+	}
 });
 
 app.post("/connexion", async (req, res) => {
