@@ -72,6 +72,25 @@ app.post("/newuser", (req, res) => {
 	res.sendFile("/index.html");
 });
 
+app.post("/connexion", async (req, res) => {
+	const { email, password } = req.body;
+	if (email && password) {
+		const utilisateur = utilisateurs.flat().find((utilisateur) => utilisateur.email === email);
+		if (utilisateur) {
+			const validPassWord = await bcrypt.compare(password, utilisateur.password);
+			if (validPassWord) {
+				req.session.idUtilisateur = utilisateur.id;
+				return res.redirect("/");
+			} else {
+				console.log("Mot de passe incorrect");
+			}
+		} else {
+			console.log("Utilisateur n'existe pas");
+		}
+	}
+	res.redirect("/connexion");
+});
+
 /*
 
 //Envoie de toutes les tâches vers le JS client
