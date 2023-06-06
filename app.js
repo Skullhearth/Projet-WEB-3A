@@ -85,7 +85,7 @@ app.post("/connexion", async (req, res) => {
 
 			if (validPassWord) {
 				req.session.idUtilisateur = utilisateur.pseudo;
-				//return res.sendStatus;
+				return res.redirect("/");
 			} else {
 				console.log("Mot de passe incorrect");
 			}
@@ -93,6 +93,7 @@ app.post("/connexion", async (req, res) => {
 			console.log("Utilisateur n'existe pas");
 		}
 	}
+	res.redirect("/connexion");
 });
 
 /*
