@@ -24,9 +24,7 @@ let connexion = () => {
 		});
 };
 
-let initiate = () => {
-	let btnValid = document.getElementById("btnValider");
-	btnValid.addEventListener("click", connexion);
+window.onload = (event) => {
+	let btnCon = document.getElementById("btnConnexion");
+	btnCon.addEventListener("click", connexion);
 };
-
-initiate();
