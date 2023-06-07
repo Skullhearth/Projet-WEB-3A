@@ -32,6 +32,15 @@ app.get("/", function (req, res) {
 	res.sendFile(__dirname + "/public/index.html");
 });
 
+//Middleware
+const protectionRoute = (req, res, next) => {
+	if (!req.session.pseudo) {
+		res.redirect("/");
+	} else {
+		next();
+	}
+};
+
 //Client de la base de données
 const uri = "mongodb+srv://AntoineK:Confiture2@webensibs.xcljq97.mongodb.net/?retryWrites=true&w=majority";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -58,15 +67,7 @@ client
 		console.error(err);
 	});
 
-//Middleware
-const protectionRoute = (req, res, next) => {
-	if (!req.session.pseudo) {
-		res.redirect("/connexion");
-	} else {
-		next();
-	}
-};
-
+//Routes
 app.get("/connecte", protectionRoute, (req, res) => {
 	console.log("Chuis dedans");
 	res.sendFile(__dirname + "/public/pokedex/pokedex.html");
@@ -107,6 +108,7 @@ app.post("/connexion", async (req, res) => {
 			console.log("Utilisateur n'existe pas");
 		}
 	}
+	res.redirect("/");
 });
 
 /*
