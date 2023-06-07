@@ -58,6 +58,20 @@ client
 		console.error(err);
 	});
 
+//Middleware
+const protectionRoute = (req, res, next) => {
+	if (!req.session.pseudo) {
+		res.redirect("/connexion");
+	} else {
+		next();
+	}
+};
+
+/*
+app.get("/livres", protectionRoute, (req, res) => {
+	res.render("livres");
+});*/
+
 //Ajout d'une nouvelle tâche
 app.post("/newuser", async (req, res) => {
 	const salt = await bcrypt.genSalt(10);
@@ -84,7 +98,7 @@ app.post("/connexion", async (req, res) => {
 			const validPassWord = await bcrypt.compare(password, utilisateur.pswd);
 
 			if (validPassWord) {
-				req.session.idUtilisateur = utilisateur.pseudo;
+				req.session.pseudo = utilisateur.pseudo;
 				return res.redirect("/");
 			} else {
 				console.log("Mot de passe incorrect");
