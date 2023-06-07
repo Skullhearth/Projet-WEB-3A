@@ -6,9 +6,12 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 
 var app = express();
-app.use(express.static("./public"));
+app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "/public/pokedex")));
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
