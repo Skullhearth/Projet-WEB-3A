@@ -107,7 +107,6 @@ app.post("/connexion", async (req, res) => {
 			console.log("Utilisateur n'existe pas");
 		}
 	}
-	res.redirect("/connexion");
 });
 
 /*
