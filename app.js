@@ -67,10 +67,10 @@ const protectionRoute = (req, res, next) => {
 	}
 };
 
-/*
-app.get("/livres", protectionRoute, (req, res) => {
-	res.render("livres");
-});*/
+app.get("/connecte", protectionRoute, (req, res) => {
+	console.log("Chuis dedans");
+	res.sendFile(__dirname + "/public/pokedex/pokedex.html");
+});
 
 //Ajout d'une nouvelle tâche
 app.post("/newuser", async (req, res) => {
@@ -99,7 +99,7 @@ app.post("/connexion", async (req, res) => {
 
 			if (validPassWord) {
 				req.session.pseudo = utilisateur.pseudo;
-				return res.redirect("/");
+				return res.redirect("/connecte");
 			} else {
 				console.log("Mot de passe incorrect");
 			}
