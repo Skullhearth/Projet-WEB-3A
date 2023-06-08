@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+//const router = require("./routes/route");
 
 var app = express();
 app.use(express.static("public"));
@@ -15,6 +16,7 @@ app.use(express.static(path.join(__dirname, "/public/pokedex")));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+//app.use(router);
 
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(
@@ -35,7 +37,7 @@ app.get("/", function (req, res) {
 	res.sendFile(__dirname + "/public/index.html");
 });
 
-//Middleware
+//Middleware de vérification de session
 const protectionRoute = (req, res, next) => {
 	if (!req.session.pseudo) {
 		res.redirect("/");
@@ -72,7 +74,7 @@ client
 
 //Routes
 app.get("/connecte", protectionRoute, (req, res) => {
-	console.log("Chuis dedans");
+	console.log("Un utilisateur se connecte");
 	res.sendFile(__dirname + "/public/pokedex/pokedex.html");
 });
 
@@ -112,6 +114,37 @@ app.post("/connexion", async (req, res) => {
 		}
 	}
 	res.redirect("/");
+});
+
+//Ajout d'un nouveau pokemon
+app.post("/newPokemon", async (req, res) => {
+	const couple = { pseudo: req.body.pseudo, pokemon: req.body.number };
+
+	try {
+		await pokeDetenus.insertOne(couple);
+		console.log("Couple user / pokemon ajouté à la base");
+		res.sendStatus(201);
+	} catch (err) {
+		console.log(err);
+	}
+});
+
+//Check si le pokemon et le user sont lié
+app.post("/couple", async (req, res) => {
+	const query = {
+		pseudo: req.body.pseudo,
+		number: req.body.number,
+	};
+
+	const result = await pokeDetenus.findOne(query);
+
+	if (result) {
+		// Une donnée correspondante a été trouvée
+		return res.json({ exists: true });
+	} else {
+		// Aucune donnée correspondante n'a été trouvée
+		return res.json({ exists: false });
+	}
 });
 
 /*

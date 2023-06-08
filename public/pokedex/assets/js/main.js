@@ -1,20 +1,48 @@
-const pokemonList = document.getElementById('pokemonList')
-const loadMoreButton = document.getElementById('loadMoreButton')
+const pokemonList = document.getElementById("pokemonList");
+const loadMoreButton = document.getElementById("loadMoreButton");
 
-const maxRecords = 151
-const limit = 12
+const maxRecords = 151;
+const limit = 12;
 let offset = 0;
 
 function convertPokemonToLi(pokemon) {
-    
-    return `
+	/*const util = {
+		pseudo: user,
+		number : numberPokemon
+	};
+
+	console.log(util);
+	const utilJSON = JSON.stringify(util);
+
+
+    fetch("/couple", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: utilJSON,
+	})
+		.then(function (response) {
+			if (response.ok) {
+				console.log("Pokemon lié au user");
+				return;
+			}
+			throw new Error("Request failed.");
+		})
+		.catch(function (error) {
+			console.log(error);
+		});*/
+
+	var user = "'Dim'";
+	return `
         <li class="pokemon missing">
             <span class="number">#${pokemon.number}</span>
             <span class="name">???</span>
 
             <div class="detail">
-                <img src="./assets/img/mysteryPokemon.jpg"
-                     alt="missing">
+                <img src="./pokedex/assets/img/mysteryPokemon.jpg"
+                    onclick="catchIt(${pokemon.number},${user})"
+                    alt="missing">
             </div>
 
                         
@@ -28,8 +56,8 @@ function convertPokemonToLi(pokemon) {
             </div>
 
         </li>
-        `
-/*`
+        `;
+	/*`
         <li class="pokemon ${pokemon.type}">
             <span class="number">#${pokemon.number}</span>
             <span class="name">${pokemon.name}</span>
@@ -57,9 +85,37 @@ function convertPokemonToLi(pokemon) {
     `*/
 }
 
+function catchIt(numberPokemon, user) {
+	const util = {
+		pseudo: user,
+		number: numberPokemon,
+	};
+
+	console.log(util);
+	const utilJSON = JSON.stringify(util);
+
+	fetch("/newPokemon", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: utilJSON,
+	})
+		.then(function (response) {
+			if (response.ok) {
+				console.log("Pokemon lié au user");
+				return;
+			}
+			throw new Error("Request failed.");
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+}
+
 function loadPokemonItens(offset, limit) {
-    pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
-        /*fetch("/tasks")
+	pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
+		/*fetch("/tasks")
 		.then((response) => {
 			if (response.ok) {
 				return response.json();
@@ -74,23 +130,23 @@ function loadPokemonItens(offset, limit) {
 		.catch((error) => {
 			console.error(error);
 		})*/
-        const newHtml = pokemons.map(convertPokemonToLi).join('')
-        pokemonList.innerHTML += newHtml
-    })
+		const newHtml = pokemons.map(convertPokemonToLi).join("");
+		pokemonList.innerHTML += newHtml;
+	});
 }
 
-loadPokemonItens(offset, limit)
+loadPokemonItens(offset, limit);
 
-loadMoreButton.addEventListener('click', () => {
-    offset += limit
-    const qtdRecordsWithNexPage = offset + limit
+loadMoreButton.addEventListener("click", () => {
+	offset += limit;
+	const qtdRecordsWithNexPage = offset + limit;
 
-    if (qtdRecordsWithNexPage >= maxRecords) {
-        const newLimit = maxRecords - offset
-        loadPokemonItens(offset, newLimit)
+	if (qtdRecordsWithNexPage >= maxRecords) {
+		const newLimit = maxRecords - offset;
+		loadPokemonItens(offset, newLimit);
 
-        loadMoreButton.parentElement.removeChild(loadMoreButton)
-    } else {
-        loadPokemonItens(offset, limit)
-    }
-})
+		loadMoreButton.parentElement.removeChild(loadMoreButton);
+	} else {
+		loadPokemonItens(offset, limit);
+	}
+});

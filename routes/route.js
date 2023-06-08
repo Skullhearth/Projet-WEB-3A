@@ -1,12 +1,16 @@
-const express = require("express");
+/*const express = require("express");
 const router = express.Router();
-const { getProducts, getProduct, createProduct, updateProduct, deleteProduct } = require("../controller/cont.js");
 
-/*
-router.get("/", getProducts);
-router.get("/:productID", getProduct);
-router.post("/", createProduct);
-router.put("/:productID", updateProduct);
-router.delete("/:productID", deleteProduct);*/
+// Importer le middleware protectionRoute
+const { protectionRoute } = require("../app");
 
-module.exports = router;
+// Importer la fonction de votre nouveau fichier
+const fonctionDeMonNouveauFichier = require("../chemin/vers/nouveauFichier");
+
+// Routes
+router.get("/connecte", protectionRoute, (req, res) => {
+	console.log("Un utilisateur se connecte");
+	res.sendFile(__dirname + "/public/pokedex/pokedex.html");
+});
+
+module.exports = router;*/
