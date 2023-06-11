@@ -1,5 +1,6 @@
 const pokemonList = document.getElementById("pokemonList");
 const loadMoreButton = document.getElementById("loadMoreButton");
+var pseudo;
 
 const maxRecords = 151;
 const limit = 12;
@@ -7,7 +8,7 @@ let offset = 0;
 
 async function convertPokemonToLi(pokemon) {
 	const util = {
-		pseudo: "Dim",
+		pseudo: pseudo,
 		pokemon: pokemon.number,
 	};
 
@@ -114,33 +115,18 @@ function catchIt(numberPokemon) {
 }
 
 function releaseIt(numberPokemon) {
-	let utilisateurActuel;
-
-	fetch("/pseudo", {
-		method: "GET",
+	const util = {
+		pseudo: pseudo,
+		number: numberPokemon,
+	};
+	const utilJSON = JSON.stringify(util);
+	return fetch(`/couple`, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: utilJSON,
 	})
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
-			}
-			throw new Error("Request failed.");
-		})
-		.then(function (data) {
-			utilisateurActuel = data.pseudo;
-			console.log("Utilisateur actuel :", utilisateurActuel);
-			const util = {
-				pseudo: utilisateurActuel,
-				number: numberPokemon,
-			};
-			const utilJSON = JSON.stringify(util);
-			return fetch(`/couple`, {
-				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: utilJSON,
-			});
-		})
 		.then(function (response) {
 			if (response.ok) {
 				console.log("Pokemon relaché par l'utilisateur");
@@ -169,6 +155,23 @@ function deconnexion() {
 window.onload = () => {
 	let btnCon = document.getElementById("deco");
 	btnCon.addEventListener("click", deconnexion);
+
+	fetch("/pseudo", {
+		method: "GET",
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			throw new Error("Request failed.");
+		})
+		.then(function (data) {
+			const pseudoValue = data.pseudo;
+			pseudo = pseudoValue.toString(); // Convertir en chaîne de caractères
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 };
 
 function loadPokemonItens(offset, limit) {
