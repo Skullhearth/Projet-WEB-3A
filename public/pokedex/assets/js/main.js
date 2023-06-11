@@ -6,7 +6,6 @@ const limit = 12;
 let offset = 0;
 
 async function convertPokemonToLi(pokemon) {
-	
 	const util = {
 		pseudo: "Dim",
 		pokemon: pokemon.number,
@@ -78,90 +77,104 @@ async function convertPokemonToLi(pokemon) {
 
 function catchIt(numberPokemon) {
 	fetch("/pseudo", {
-	  method: "GET"
+		method: "GET",
 	})
-	  .then(function (response) {
-		if (response.ok) {
-		  return response.json();
-		}
-		throw new Error("Request failed.");
-	  })
-	  .then(function (data) {
-		const utilisateurActuel = data.pseudo;
-		console.log("Utilisateur actuel :", utilisateurActuel);
-		const util = {
-		  pseudo: utilisateurActuel,
-		  number: numberPokemon
-		};
-		const utilJSON = JSON.stringify(util);
-		return fetch("/newPokemon", {
-		  method: "POST",
-		  headers: {
-			"Content-Type": "application/json",
-		  },
-		  body: utilJSON
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			throw new Error("Request failed.");
+		})
+		.then(function (data) {
+			const utilisateurActuel = data.pseudo;
+			console.log("Utilisateur actuel :", utilisateurActuel);
+			const util = {
+				pseudo: utilisateurActuel,
+				number: numberPokemon,
+			};
+			const utilJSON = JSON.stringify(util);
+			return fetch("/newPokemon", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: utilJSON,
+			});
+		})
+		.then(function (response) {
+			if (response.ok) {
+				console.log("Pokemon lié à l'utilisateur");
+			} else {
+				throw new Error("Request failed.");
+			}
+		})
+		.catch(function (error) {
+			console.log(error);
 		});
-	  })
-	  .then(function (response) {
-		if (response.ok) {
-		  console.log("Pokemon lié à l'utilisateur");
-
-		} else {
-		  throw new Error("Request failed.");
-		}
-	  })
-	  .catch(function (error) {
-		console.log(error);
-	  });
-  }
-  
+}
 
 function releaseIt(numberPokemon) {
 	let utilisateurActuel;
-  
-	fetch("/pseudo", {
-	  method: "GET"
-	})
-	  .then(function (response) {
-		if (response.ok) {
-		  return response.json();
-		}
-		throw new Error("Request failed.");
-	  })
-	  .then(function (data) {
-		utilisateurActuel = data.pseudo;
-		console.log("Utilisateur actuel :", utilisateurActuel);
-		const util = {
-		  pseudo: utilisateurActuel,
-		  number: numberPokemon
-		};
-		const utilJSON = JSON.stringify(util);
-		return fetch(`/couple`, {
-		  method: 'DELETE',
-		  headers: {
-			"Content-Type": "application/json",
-		  },
-		  body: utilJSON
-		});
-	  })
-	  .then(function (response) {
-		if (response.ok) {
-		  console.log("Pokemon relaché par l'utilisateur");
 
-		} else {
-		  throw new Error("Request failed.");
+	fetch("/pseudo", {
+		method: "GET",
+	})
+		.then(function (response) {
+			if (response.ok) {
+				return response.json();
+			}
+			throw new Error("Request failed.");
+		})
+		.then(function (data) {
+			utilisateurActuel = data.pseudo;
+			console.log("Utilisateur actuel :", utilisateurActuel);
+			const util = {
+				pseudo: utilisateurActuel,
+				number: numberPokemon,
+			};
+			const utilJSON = JSON.stringify(util);
+			return fetch(`/couple`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: utilJSON,
+			});
+		})
+		.then(function (response) {
+			if (response.ok) {
+				console.log("Pokemon relaché par l'utilisateur");
+			} else {
+				throw new Error("Request failed.");
+			}
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+}
+
+function deconnexion() {
+	fetch("/deconnexion", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	}).then((response) => {
+		if (response.redirected) {
+			window.location.href = response.url; // Redirection vers "/"
 		}
-	  })
-	  .catch(function (error) {
-		console.log(error);
-	  });
-  }
-  
+	});
+}
+
+window.onload = () => {
+	let btnCon = document.getElementById("deco");
+	btnCon.addEventListener("click", deconnexion);
+};
 
 function loadPokemonItens(offset, limit) {
 	pokeApi.getPokemons(offset, limit).then(async (pokemons = []) => {
 		const newHtml = (await Promise.all(pokemons.map(convertPokemonToLi))).join("");
-		
+
 		pokemonList.innerHTML += newHtml;
 	});
 }
@@ -180,4 +193,4 @@ loadMoreButton.addEventListener("click", () => {
 	} else {
 		loadPokemonItens(offset, limit);
 	}
-})
+});

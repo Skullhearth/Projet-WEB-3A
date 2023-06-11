@@ -154,7 +154,6 @@ app.delete("/couple", async (req, res) => {
 
 		console.log(`couple a supprimer : ${query}`);
 
-
 		const result = await pokeDetenus.deleteOne(query);
 		if (result.deletedCount === 0) {
 			console.log("Aucun document trouvé avec l'ID spécifié");
@@ -173,69 +172,14 @@ app.get("/pseudo", async (req, res) => {
 	const utilisateurActuel = req.session.pseudo;
 	console.log("Utilisateur actuel :", utilisateurActuel);
 	res.json({ pseudo: utilisateurActuel });
-
-  });
-  
-
-/*
-
-//Envoie de toutes les tâches vers le JS client
-app.get("/tasks", (req, res) => {
-	//console.log("Reçu le fetch");
-	taches
-		.find()
-		.toArray()
-		.then((docs) => {
-			//console.log("Eléments de la table : ", docs);
-			res.json(docs);
-		})
-		.catch((err) => {
-			console.error(err);
-			res.status(500).send("Erreur lors de la récupération des tâches");
-		});
 });
 
-//Suppression d'une tâche
-app.delete("/deletetask/:id", async (req, res) => {
-	try {
-		const taskId = req.params.id;
-		console.log(`ID de la tâche à supprimer : ${taskId}`);
-
-		const query = { _id: new ObjectId(taskId) };
-
-		const result = await taches.deleteOne(query);
-		if (result.deletedCount === 0) {
-			console.log("Aucun document trouvé avec l'ID spécifié");
-			res.status(404).send("Aucun document trouvé avec l'ID spécifié");
-		} else {
-			console.log("Document supprimé avec succès");
-			res.status(204).send("Document supprimé avec succès");
+app.post("/deconnexion", (req, res) => {
+	req.session.destroy((err) => {
+		if (err) {
+			return res.redirect("/");
 		}
-	} catch (error) {
-		console.error("Erreur lors de la suppression du document :", error);
-		res.status(500).send("Erreur lors de la suppression du document");
-	}
+		res.clearCookie("sid");
+		res.redirect("/");
+	});
 });
-
-//Modification de l'état d'un tâche
-app.put("/updatetask/:id", async (req, res) => {
-	try {
-		const taskId = req.params.id;
-		const updatedField = req.body.field;
-		const updatedValue = req.body.value;
-
-		const query = { _id: new ObjectId(taskId) };
-		const update = { $set: { [updatedField]: updatedValue } };
-
-		const result = await taches.updateOne(query, update);
-
-		if (result.matchedCount === 0) {
-			console.log("Aucun document trouvé avec l'ID spécifié");
-		} else {
-			console.log("Document mis à jour avec succès");
-		}
-	} catch (error) {
-		console.error("Erreur lors de la mise à jour du document :", error);
-	}
-});
-*/
