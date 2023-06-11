@@ -133,13 +133,14 @@ app.post("/newPokemon", async (req, res) => {
 app.post("/couple", async (req, res) => {
 	const query = {
 		pseudo: req.body.pseudo,
-		number: req.body.number,
+		pokemon: req.body.pokemon,
 	};
-
+	console.log("req ",query);
 	const result = await pokeDetenus.findOne(query);
-
-	if (result) {
+	console.log("res ", result);
+	if (result !== null) {
 		// Une donnée correspondante a été trouvée
+		
 		return res.json({ exists: true });
 	} else {
 		// Aucune donnée correspondante n'a été trouvée
