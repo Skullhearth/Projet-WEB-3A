@@ -99,7 +99,6 @@ app.post("/connexion", async (req, res) => {
 	if (pseudo && password) {
 		const query = { pseudo: pseudo };
 		const utilisateur = await utilisateurs.findOne(query);
-		console.log(utilisateur);
 		if (utilisateur) {
 			const validPassWord = await bcrypt.compare(password, utilisateur.pswd);
 
@@ -135,16 +134,17 @@ app.post("/couple", async (req, res) => {
 		pseudo: req.body.pseudo,
 		pokemon: req.body.pokemon,
 	};
-	console.log("req ",query);
+	console.log("req ", req.body.pokemon);
 	const result = await pokeDetenus.findOne(query);
-	console.log("res ", result);
-	if (result !== null) {
+	//await console.log("res ", result);
+	if (result) {
 		// Une donnée correspondante a été trouvée
-		
-		return res.json({ exists: true });
+		console.log("Trouvé, pokemémon : " + req.body.pokemon);
+		return res.sendStatus(200);
 	} else {
 		// Aucune donnée correspondante n'a été trouvée
-		return res.json({ exists: false });
+		console.log("Non trouvé");
+		return res.sendStatus(404);
 	}
 });
 
