@@ -134,7 +134,6 @@ app.post("/couple", async (req, res) => {
 		pseudo: req.body.pseudo,
 		pokemon: req.body.pokemon,
 	};
-	console.log("req ", req.body.pokemon);
 	const result = await pokeDetenus.findOne(query);
 	//await console.log("res ", result);
 	if (result) {
@@ -147,6 +146,36 @@ app.post("/couple", async (req, res) => {
 		return res.sendStatus(404);
 	}
 });
+
+//Suppression d'un couple
+app.delete("/couple", async (req, res) => {
+	try {
+		const query = { pseudo: req.body.pseudo, pokemon: req.body.number };
+
+		console.log(`couple a supprimer : ${query}`);
+
+
+		const result = await pokeDetenus.deleteOne(query);
+		if (result.deletedCount === 0) {
+			console.log("Aucun document trouvé avec l'ID spécifié");
+			res.status(404).send("Aucun document trouvé avec l'ID spécifié");
+		} else {
+			console.log("Document supprimé avec succès");
+			res.status(204).send("Document supprimé avec succès");
+		}
+	} catch (error) {
+		console.error("Erreur lors de la suppression du document :", error);
+		res.status(500).send("Erreur lors de la suppression du document");
+	}
+});
+
+app.get("/pseudo", async (req, res) => {
+	const utilisateurActuel = req.session.pseudo;
+	console.log("Utilisateur actuel :", utilisateurActuel);
+	res.json({ pseudo: utilisateurActuel });
+
+  });
+  
 
 /*
 

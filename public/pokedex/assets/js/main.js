@@ -6,7 +6,7 @@ const limit = 12;
 let offset = 0;
 
 async function convertPokemonToLi(pokemon) {
-	var user = "'Dim'";
+	
 	const util = {
 		pseudo: "Dim",
 		pokemon: pokemon.number,
@@ -35,7 +35,7 @@ async function convertPokemonToLi(pokemon) {
 				${pokemon.types.map((type) => `<li class="type ${type}">${type}</li>`).join("")}
 			  </ol>
   
-			  <img src="${pokemon.photo}" alt="${pokemon.name}">
+			  <img src="${pokemon.photo}" onclick="releaseIt(${pokemon.number})" alt="${pokemon.name}" ">
 			</div>
   
 			<p>Abilities</p>
@@ -47,8 +47,6 @@ async function convertPokemonToLi(pokemon) {
 			</div>
 		  </li>
 		`;
-
-			//console.log(test);
 			return test;
 		} else {
 			console.log("La relation n'existe pas");
@@ -58,7 +56,7 @@ async function convertPokemonToLi(pokemon) {
 			<span class="name">???</span>
   
 			<div class="detail">
-			  <img src="./pokedex/assets/img/mysteryPokemon.jpg" onclick="catchIt(${pokemon.number},${user})" alt="missing">
+			  <img src="./pokedex/assets/img/mysteryPokemon.jpg" onclick="catchIt(${pokemon.number})" alt="missing">
 			</div>
   
 			<p>Abilities</p>
@@ -70,8 +68,6 @@ async function convertPokemonToLi(pokemon) {
 			</div>
 		  </li>
 		`;
-
-			//console.log(test);
 			return test;
 		}
 	} catch (error) {
@@ -80,38 +76,92 @@ async function convertPokemonToLi(pokemon) {
 	}
 }
 
-function catchIt(numberPokemon, user) {
-	const util = {
-		pseudo: user,
-		number: numberPokemon,
-	};
-
-	console.log(util);
-	const utilJSON = JSON.stringify(util);
-
-	fetch("/newPokemon", {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: utilJSON,
+function catchIt(numberPokemon) {
+	fetch("/pseudo", {
+	  method: "GET"
 	})
-		.then(function (response) {
-			if (response.ok) {
-				console.log("Pokemon lié au user");
-				return;
-			}
-			throw new Error("Request failed.");
-		})
-		.catch(function (error) {
-			console.log(error);
+	  .then(function (response) {
+		if (response.ok) {
+		  return response.json();
+		}
+		throw new Error("Request failed.");
+	  })
+	  .then(function (data) {
+		const utilisateurActuel = data.pseudo;
+		console.log("Utilisateur actuel :", utilisateurActuel);
+		const util = {
+		  pseudo: utilisateurActuel,
+		  number: numberPokemon
+		};
+		const utilJSON = JSON.stringify(util);
+		return fetch("/newPokemon", {
+		  method: "POST",
+		  headers: {
+			"Content-Type": "application/json",
+		  },
+		  body: utilJSON
 		});
-}
+	  })
+	  .then(function (response) {
+		if (response.ok) {
+		  console.log("Pokemon lié à l'utilisateur");
+
+		} else {
+		  throw new Error("Request failed.");
+		}
+	  })
+	  .catch(function (error) {
+		console.log(error);
+	  });
+  }
+  
+
+function releaseIt(numberPokemon) {
+	let utilisateurActuel;
+  
+	fetch("/pseudo", {
+	  method: "GET"
+	})
+	  .then(function (response) {
+		if (response.ok) {
+		  return response.json();
+		}
+		throw new Error("Request failed.");
+	  })
+	  .then(function (data) {
+		utilisateurActuel = data.pseudo;
+		console.log("Utilisateur actuel :", utilisateurActuel);
+		const util = {
+		  pseudo: utilisateurActuel,
+		  number: numberPokemon
+		};
+		const utilJSON = JSON.stringify(util);
+		return fetch(`/couple`, {
+		  method: 'DELETE',
+		  headers: {
+			"Content-Type": "application/json",
+		  },
+		  body: utilJSON
+		});
+	  })
+	  .then(function (response) {
+		if (response.ok) {
+		  console.log("Pokemon relaché par l'utilisateur");
+
+		} else {
+		  throw new Error("Request failed.");
+		}
+	  })
+	  .catch(function (error) {
+		console.log(error);
+	  });
+  }
+  
 
 function loadPokemonItens(offset, limit) {
 	pokeApi.getPokemons(offset, limit).then(async (pokemons = []) => {
 		const newHtml = (await Promise.all(pokemons.map(convertPokemonToLi))).join("");
-		console.log("newpokemon html " + newHtml);
+		
 		pokemonList.innerHTML += newHtml;
 	});
 }
@@ -130,4 +180,4 @@ loadMoreButton.addEventListener("click", () => {
 	} else {
 		loadPokemonItens(offset, limit);
 	}
-});
+})
