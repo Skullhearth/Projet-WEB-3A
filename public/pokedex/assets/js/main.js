@@ -156,6 +156,7 @@ window.onload = () => {
 	let btnCon = document.getElementById("deco");
 	btnCon.addEventListener("click", deconnexion);
 
+	//Va chercher le pseudo de l'utilisateur et le rentre dans la variable "pseudo"
 	fetch("/pseudo", {
 		method: "GET",
 	})

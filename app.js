@@ -1,13 +1,10 @@
-const http = require("http");
 const express = require("express");
-const fs = require("fs");
 const { MongoClient, ServerApiVersion, Collection, ObjectId } = require("mongodb");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-//const router = require("./routes/route");
 
 var app = express();
 app.use(express.static("public"));
@@ -16,9 +13,9 @@ app.use(express.static(path.join(__dirname, "/public/pokedex")));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-//app.use(router);
 
 const oneDay = 1000 * 60 * 60 * 24;
+//Création de session
 app.use(
 	session({
 		secret: "randomstringtavumagueule1546531",
@@ -57,7 +54,9 @@ const client = new MongoClient(uri, {
 	},
 });
 
+//Collection des utilisateurs
 var utilisateurs;
+//Collection des pokémons détenus
 var pokeDetenus;
 client
 	.connect()
@@ -71,12 +70,6 @@ client
 	.catch((err) => {
 		console.error(err);
 	});
-
-//Routes
-app.get("/connecte", protectionRoute, (req, res) => {
-	console.log("Un utilisateur se connecte");
-	res.sendFile(__dirname + "/public/pokedex/pokedex.html");
-});
 
 //Ajout d'une nouvelle tâche
 app.post("/newuser", async (req, res) => {
@@ -100,9 +93,11 @@ app.post("/connexion", async (req, res) => {
 		const query = { pseudo: pseudo };
 		const utilisateur = await utilisateurs.findOne(query);
 		if (utilisateur) {
+			//Comparaison du mdp crypté et de celui renseigné
 			const validPassWord = await bcrypt.compare(password, utilisateur.pswd);
 
 			if (validPassWord) {
+				//Ajout du pseudo dans la session
 				req.session.pseudo = utilisateur.pseudo;
 				return res.redirect("/connecte");
 			} else {
@@ -113,6 +108,12 @@ app.post("/connexion", async (req, res) => {
 		}
 	}
 	res.redirect("/");
+});
+
+//Redirection vers l'application après authentification
+app.get("/connecte", protectionRoute, (req, res) => {
+	console.log("Un utilisateur se connecte");
+	res.sendFile(__dirname + "/public/pokedex/pokedex.html");
 });
 
 //Ajout d'un nouveau pokemon
@@ -128,16 +129,15 @@ app.post("/newPokemon", async (req, res) => {
 	}
 });
 
-//Check si le pokemon et le user sont lié
+//Check si le pokemon et le user sont liés
 app.post("/couple", async (req, res) => {
 	const query = {
 		pseudo: req.body.pseudo,
 		pokemon: req.body.pokemon,
 	};
 	const result = await pokeDetenus.findOne(query);
-	//await console.log("res ", result);
 	if (result) {
-		// Une donnée correspondante a été trouvée
+		// Une donnée correspondante n'a été trouvée
 		console.log("Trouvé, pokemémon : " + req.body.pokemon);
 		return res.sendStatus(200);
 	} else {
@@ -168,12 +168,14 @@ app.delete("/couple", async (req, res) => {
 	}
 });
 
+//Retourne le pseudo de l'utilisateur actuel
 app.get("/pseudo", async (req, res) => {
 	const utilisateurActuel = req.session.pseudo;
 	console.log("Utilisateur actuel :", utilisateurActuel);
 	res.json({ pseudo: utilisateurActuel });
 });
 
+//Détruit la session et redirige vers la page de connexion
 app.post("/deconnexion", (req, res) => {
 	req.session.destroy((err) => {
 		if (err) {

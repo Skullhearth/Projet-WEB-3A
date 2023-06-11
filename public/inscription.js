@@ -17,7 +17,7 @@ function validateForm() {
 		return false;
 	}
 
-	// Code pour envoyer les données à la base de données ici
+	// Code pour envoyer les données à la base de données
 
 	const util = {
 		nickname: pseudo,

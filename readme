@@ -1,0 +1,15 @@
+Pour lancer l'application :
+
+faire : npm install
+
+Dans la barre de recherche du navigateur : localhost:3000
+
+Vous pouvez vous inscrire ou utiliser un compte existant
+
+Compte existant :
+	pseudo : Jean-Bourrepiff
+	mdp    : jesuisbo
+
+
+cliquer sur une image pour ajouter/supprimer un pokemon de la collection
+/!\ il faut recharger la page pour voir apparaitre les modifications.
